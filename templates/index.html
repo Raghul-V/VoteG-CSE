@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>VoteG-CSE</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <form action="/" method="POST">
+        <h1>Leaderboard <button type="submit" id="submit">Submit Vote</button></h1>
+        <table cellspacing="0">
+            <tr>
+                <th>RANK</th>
+                <th>VOTE</th>
+                <th>NAME</th>
+                <th>BATCH</th>
+                <th>VOTES</th>
+            </tr>
+            {% for i in range(leaderboard|length) %}
+            <tr>
+                <td>{{ i+1 }}</td>
+                <td><input type="radio" name="new-vote" value="{{ leaderboard[i].id }}" id="{{ leaderboard[i].id }}"></td>
+                <td>{{ leaderboard[i].name }}</td>
+                <td>{{ leaderboard[i].batch }}</td>
+                <td>{{ leaderboard[i].votes }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="hidden" name="old-vote" id="old-vote">
+    </form>
+</div>
+<script type="text/javascript">
+    const submitButton = document.getElementById("submit")
+    
+    function submit() {
+        let vote = document.querySelector("input:checked")
+        if (vote) {
+            document.getElementById("old-vote").value = localStorage.getItem("old_vote")
+            localStorage.setItem("old_vote", vote.value)
+        }
+    }
+
+    submitButton.addEventListener("click", submit)
+    
+    let old_vote = localStorage.getItem("old_vote")
+    if (old_vote) {
+        document.getElementById(`${old_vote}`).checked = true
+    }
+</script>
+{% endblock %}
